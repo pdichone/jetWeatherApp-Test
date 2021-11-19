@@ -2,7 +2,13 @@ package com.bawp.jetweatherapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+
+val white = Color(0xffffffff)
+val black = Color(0xff000000)
+val paleWhite = Color(0xfff3f7f9)
+val paleBlack = Color(0xff222325)
+val red = Color(0xFFEB5757)
+//val Purple200 = Color(0xFFBB86FC)
+//val Purple500 = Color(0xFF6200EE)
+//val Purple700 = Color(0xFF3700B3)
+//val Teal200 = Color(0xFF03DAC5)

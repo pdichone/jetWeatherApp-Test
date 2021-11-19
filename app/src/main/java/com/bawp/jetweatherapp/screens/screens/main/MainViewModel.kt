@@ -1,4 +1,4 @@
-package com.bawp.jetweatherapp.screens.main
+package com.bawp.jetweatherapp.screens.screens.main
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
@@ -22,7 +22,7 @@ class MainViewModel @Inject constructor( private val repository: WeatherReposito
             = mutableStateOf(DataOrException(null, true,Exception("")))
 
     init {
-        getWeather("spokane")
+        getWeather("Spokane")
     }
     private fun getWeather(city: String) {
         viewModelScope.launch {

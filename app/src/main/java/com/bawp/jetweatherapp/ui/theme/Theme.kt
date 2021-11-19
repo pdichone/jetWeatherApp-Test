@@ -7,12 +7,17 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200, primaryVariant = Purple700, secondary = Teal200
+    primary = black,
+    onPrimary = white,
+    primaryVariant = paleBlack
+
                                          )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500, primaryVariant = Purple700, secondary = Teal200
-
+    primary = white,
+    onPrimary = black,
+    primaryVariant = paleWhite
+                                           )
     /* Other default colors to override
     background = Color.White,
     surface = Color.White,
@@ -21,7 +26,7 @@ private val LightColorPalette = lightColors(
     onBackground = Color.Black,
     onSurface = Color.Black,
     */
-                                           )
+
 
 @Composable
 fun JetWeatherAppTheme(
@@ -35,6 +40,9 @@ fun JetWeatherAppTheme(
     }
 
     MaterialTheme(
-        colors = colors, typography = Typography, shapes = Shapes, content = content
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
                  )
 }
