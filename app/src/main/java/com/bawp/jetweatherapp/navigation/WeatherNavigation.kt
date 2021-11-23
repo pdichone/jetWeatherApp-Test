@@ -2,15 +2,20 @@ package com.bawp.jetweatherapp.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.bawp.jetweatherapp.screens.screens.main.MainScreen
-import com.bawp.jetweatherapp.screens.screens.main.MainViewModel
+import com.bawp.jetweatherapp.screens.screens.search.SearchScreen
+import com.bawp.jetweatherapp.screens.screens.search.SearchViewModel
 import com.bawp.jetweatherapp.screens.screens.splash.WeatherSplashScreen
 
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -23,9 +28,26 @@ fun WeatherNavigation() {
             WeatherSplashScreen(navController = navController)
         }
 
-        composable(WeatherScreens.MainScreen.name) {
-            val viewModel = hiltViewModel<MainViewModel>()
-            MainScreen(viewModel = viewModel,navController = navController,)
+        //val searchName = WeatherScreens.SearchScreen.name
+        composable(WeatherScreens.SearchScreen.name){
+                       val viewModel = hiltViewModel<SearchViewModel>()
+                       SearchScreen(navController = navController)
+                   }
+
+        val route = WeatherScreens.MainScreen.name
+        composable("$route/{city}",
+                  arguments = listOf(
+                      navArgument("city"){
+                          type = NavType.StringType
+                      })) { navBack ->
+
+              navBack.arguments?.getString("city").let {
+
+                  val viewModel = hiltViewModel<SearchViewModel>()
+                  MainScreen(viewModel = viewModel,navController = navController,
+                            city = it.toString())
+              }
         }
+
     }
 }

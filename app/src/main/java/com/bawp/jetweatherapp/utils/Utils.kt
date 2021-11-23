@@ -16,3 +16,7 @@ fun formatDateTime(timestamp: Int): String {
 
     return sdf.format(date)
 }
+
+fun formatDecimals(item: Double): String {
+    return " %.0f".format(item)
+}

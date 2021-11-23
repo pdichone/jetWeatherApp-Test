@@ -17,21 +17,33 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor( private val repository: WeatherRepository)
     :ViewModel(){
 
-
     val data: MutableState<DataOrException<WeatherObject, Boolean, Exception>>
             = mutableStateOf(DataOrException(null, true,Exception("")))
 
-    init {
-        getWeather("Spokane")
-    }
-    private fun getWeather(city: String) {
-        viewModelScope.launch {
-             data.value.loading = true
-            data.value = repository.getWeather(cityQuery = city)
-            if (data.value.data.toString().isNotEmpty()) data.value.loading = false
-        }
-        Log.d("GET", "getWeather: ${data.value.data.toString()}")
+//    init {
+//       // loadWeather()
+//    }
+//    private fun loadWeather() {
+//        getWeather("Spokane")
+//    }
+//     fun getWeather(city: String) {
+//        viewModelScope.launch {
+//            if (city.isEmpty()) return@launch
+//             data.value.loading = true
+//            data.value = repository.getWeather(cityQuery = city)
+//            if (data.value.data.toString().isNotEmpty()) data.value.loading = false
+//        }
+//        Log.d("GET", "getWeather: ${data.value.data.toString()}")
+//
+//    }
 
+
+    fun getWeatherData(city: String): DataOrException<WeatherObject, Boolean, Exception> {
+        viewModelScope.launch {
+            data.value = repository.getWeather(cityQuery = city)
+        }
+        Log.d("HAP", "getWeatherData: ${data.value}")
+        return data.value
     }
 
 }
