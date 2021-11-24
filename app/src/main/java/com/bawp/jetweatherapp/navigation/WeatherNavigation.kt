@@ -47,7 +47,8 @@ fun WeatherNavigation() {
               navBack.arguments?.getString("city").let {
 
                   val viewModel = hiltViewModel<SearchViewModel>()
-                  MainScreen(viewModel = viewModel,navController = navController,
+                  MainScreen(viewModel = viewModel,
+                      navController = navController,
                             city = it.toString())
               }
         }

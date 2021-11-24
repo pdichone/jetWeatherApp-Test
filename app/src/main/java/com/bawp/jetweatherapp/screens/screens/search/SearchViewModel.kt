@@ -3,13 +3,10 @@ package com.bawp.jetweatherapp.screens.screens.search
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.bawp.jetweatherapp.data.DataOrException
 import com.bawp.jetweatherapp.model.WeatherObject
 import com.bawp.jetweatherapp.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +19,8 @@ class SearchViewModel @Inject constructor(private val repository: WeatherReposit
     suspend fun getWeatherData(city: String): DataOrException<WeatherObject, Boolean, Exception> {
         return repository.getWeather(cityQuery = city)
     }
+
+
 }
 
 //    fun getWeatherData(city: String): DataOrException<WeatherObject, Boolean, Exception> {

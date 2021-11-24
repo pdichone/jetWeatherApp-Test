@@ -2,6 +2,8 @@ package com.bawp.jetweatherapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.bawp.jetweatherapp.data.UnitModeDataStore
+import com.bawp.jetweatherapp.data.UnitModeImpl
 import com.bawp.jetweatherapp.data.WeatherDao
 import com.bawp.jetweatherapp.data.WeatherDatabase
 import com.bawp.jetweatherapp.network.WeatherApi
@@ -19,6 +21,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
+    @Singleton
+    @Provides
+    fun providePreferenceManager(@ApplicationContext context: Context): UnitModeImpl {
+        return UnitModeDataStore(context)
+    }
 
     @Singleton
     @Provides

@@ -5,13 +5,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "cities_tbl")
-data class MCity(
+@Entity(tableName = "settings_tbl")
+data class Unit(
     @NonNull
     @PrimaryKey
-    @ColumnInfo(name = "city")
-    val city: String,
+    @ColumnInfo(name = "unit")
+    val unit: String,
 
-    @ColumnInfo(name = "country")
-    val country: String
-                )
+               )
