@@ -8,7 +8,7 @@ import com.bawp.jetweatherapp.utils.Constants
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(private val api: WeatherApi) {
-    private val dataOrException = DataOrException<WeatherObject, Boolean, Exception>()
+    //private val dataOrException = DataOrException<WeatherObject, Boolean, Exception>()
 
     suspend fun getWeather(cityQuery: String): DataOrException<WeatherObject, Boolean, Exception> {
          val response = try {

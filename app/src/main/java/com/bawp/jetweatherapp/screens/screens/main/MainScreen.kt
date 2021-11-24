@@ -67,17 +67,20 @@ fun MainScreen(
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
-fun MainScaffold( weatherObject: WeatherObject, navController: NavHostController) {
+fun MainScaffold( weatherObject: WeatherObject,
+                  navController: NavHostController) {
 
     Scaffold(topBar = {
 
             WeatherAppBar(title = weatherObject.city.name + ", ${weatherObject.city.country}",
                 navController = navController,
-                onAddActionClicked = { navController.navigate(WeatherScreens.SearchScreen.name) })
+                onAddActionClicked = { navController.navigate(WeatherScreens.SearchScreen.name) },
+                         elevation = 5.dp)
 
 
     }, bottomBar = {}, backgroundColor = Color.LightGray.copy(alpha = 0.08f)
             ) {
+
         MainContent(data = weatherObject)
     }
 
@@ -146,7 +149,8 @@ private fun MainContent(data: WeatherObject?) {
         SunsetSunRiseRow(weather = data.list[0])
         Spacer(modifier = Modifier.height(15.dp))
 
-        Text("This Week")
+        Text("This Week",
+            style = MaterialTheme.typography.subtitle1, fontWeight = FontWeight.Bold)
 
         Surface(modifier = Modifier
             .fillMaxWidth()

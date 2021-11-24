@@ -56,13 +56,15 @@ fun SunsetSunRiseRow(weather: WeatherItem?) {
                     contentDescription = "sunrise",
                     Modifier.size(25.dp)
                      )
-                Text(text = formatDateTime(weather!!.sunrise))
+                Text(text = formatDateTime(weather!!.sunrise),
+                    style = MaterialTheme.typography.caption)
             }
             Spacer(modifier = Modifier.fillMaxWidth(0.14f))
             Row(/*modifier = Modifier.offset(y = 40.dp),*/
                 horizontalArrangement = Arrangement.End
                ) {
-                Text(text = formatDateTime(weather!!.sunset))
+                Text(text = formatDateTime(weather!!.sunset),
+                    style = MaterialTheme.typography.caption)
                 Image(
                     painter = painterResource(id = R.drawable.sunset),
                     contentDescription = "sunset",
@@ -91,7 +93,8 @@ fun HumidityWindPressureRow(weather: WeatherItem? = null) {
                 contentDescription = "humidity",
                 modifier = Modifier.size(20.dp)
                 )
-            Text(text = "${weather?.humidity.toString()}%")
+            Text(text = "${weather?.humidity.toString()}%",
+                style = MaterialTheme.typography.caption)
         }
         Spacer(modifier = Modifier.fillMaxWidth(0.05f))
         Row(modifier = Modifier.padding(3.dp)) {
@@ -100,7 +103,8 @@ fun HumidityWindPressureRow(weather: WeatherItem? = null) {
                 contentDescription = "pressure",
                 modifier = Modifier.size(20.dp)
                 )
-            Text(text = "${weather?.pressure.toString()} psi")
+            Text(text = "${weather?.pressure.toString()} psi",
+                style = MaterialTheme.typography.caption)
         }
         Spacer(modifier = Modifier.fillMaxWidth(0.05f))
         Row(modifier = Modifier.padding(3.dp)) {
@@ -109,7 +113,8 @@ fun HumidityWindPressureRow(weather: WeatherItem? = null) {
                 contentDescription = "wind",
                 modifier = Modifier.size(20.dp)
                 )
-            Text(text = " %.0f".format(weather?.speed) + "mph")
+            Text(text = " %.0f".format(weather?.speed) + "mph",
+                style = MaterialTheme.typography.caption)
         }
 
     }

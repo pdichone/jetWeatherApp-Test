@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.bawp.jetweatherapp.components.CommonTextField
-import com.bawp.jetweatherapp.components.InputField
 import com.bawp.jetweatherapp.components.WeatherAppBar
 import com.bawp.jetweatherapp.navigation.WeatherScreens
 
@@ -25,14 +24,12 @@ fun SearchScreen(navController: NavController) {
     var mCity by remember { mutableStateOf("") }
 
     Scaffold(topBar = {
+
         WeatherAppBar(
-            title = WeatherScreens.SearchScreen.name,
+            title = "Search",
             icon = Icons.Default.ArrowBack,
-            showProfile = false,
-            navController = navController,
-            //onAddActionClicked = {navController.navigate(WeatherScreens.SearchScreen.name)}
-                     ){
-            //Todo: navigate back and add push the city name to mainScreen
+            isMainScreen = false,
+            navController = navController,){
             navController.popBackStack()
         }
     }) {
@@ -42,7 +39,8 @@ fun SearchScreen(navController: NavController) {
                 SearchForm(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp).align(Alignment.CenterHorizontally)){ searchQuery ->
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally)){ searchQuery ->
                     mCity = searchQuery
                     navController.navigate(WeatherScreens.MainScreen.name + "/$mCity")
                 }

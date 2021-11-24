@@ -10,9 +10,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
+import com.bawp.jetweatherapp.screens.screens.about.AboutScreen
+import com.bawp.jetweatherapp.screens.screens.favorites.FavoritesScreen
 import com.bawp.jetweatherapp.screens.screens.main.MainScreen
 import com.bawp.jetweatherapp.screens.screens.search.SearchScreen
 import com.bawp.jetweatherapp.screens.screens.search.SearchViewModel
+import com.bawp.jetweatherapp.screens.screens.settings.SettingsScreen
 import com.bawp.jetweatherapp.screens.screens.splash.WeatherSplashScreen
 
 @ExperimentalComposeUiApi
@@ -49,5 +52,16 @@ fun WeatherNavigation() {
               }
         }
 
+        composable(WeatherScreens.AboutScreen.name){
+            AboutScreen(navController = navController)
+        }
+
+        composable(WeatherScreens.FavoriteScreen.name){
+            FavoritesScreen(navController = navController)
+        }
+
+        composable(WeatherScreens.SettingsScreen.name){
+            SettingsScreen(navController = navController)
+        }
     }
 }
