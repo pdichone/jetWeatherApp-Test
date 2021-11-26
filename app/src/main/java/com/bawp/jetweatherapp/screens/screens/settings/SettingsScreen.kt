@@ -27,16 +27,21 @@ import com.bawp.jetweatherapp.components.WeatherAppBar
 fun SettingsScreen(navController: NavController,
                    settingsViewModel: SettingsViewModel = hiltViewModel()) {
 
-
-    val measurementUnits = listOf("Imperial", "Metric")
+    val measurementUnits = listOf("Imperial (F)", "Metric (C)")
     val choiceFromDb = settingsViewModel.unitList.collectAsState().value
-    val defaultChoice = if (choiceFromDb.isNullOrEmpty()) measurementUnits[0] else choiceFromDb[0].unit
+    val defaultChoice =
+        if (choiceFromDb.isNullOrEmpty()) measurementUnits[0] else choiceFromDb[0].unit
+    if (choiceFromDb.isNotEmpty()) {
+        Log.d("TAGG", "SettingsScreen: ${choiceFromDb.toString()}")
+    }
+
     val answerState = remember(measurementUnits) {
         mutableStateOf<Int?>(0)//default imperial
     }
-    val choiceState = remember(choiceFromDb) {
+    val choiceState = remember() {
         mutableStateOf(defaultChoice) //default imperial
     }
+
 
     val selectedUnit: (Int) -> Unit = remember(measurementUnits) {
         {
@@ -46,98 +51,87 @@ fun SettingsScreen(navController: NavController,
 
     }
 
-   Scaffold(topBar = {
-       WeatherAppBar(
-           title = "Settings",
-           icon = Icons.Default.ArrowBack,
-           isMainScreen = false,
-           navController = navController,){
-           navController.popBackStack()
-       }
-   }) {
-       Surface(modifier = Modifier
-           .fillMaxWidth()
-           .fillMaxHeight()) {
-           Column(
-               verticalArrangement = Arrangement.Center,
-               horizontalAlignment = Alignment.CenterHorizontally
-                 ) {
-               Text("Change Units of Measurement",
-                   modifier = Modifier.padding(bottom = 15.dp))
-               
-               measurementUnits.forEachIndexed { index, choice ->
-                   Row(modifier = Modifier
-                       .padding(3.dp)
-                       .fillMaxWidth()
-                       .height(55.dp)
-                       .border(
-                           width = 4.dp,
-                           brush = Brush.linearGradient(
-                               colors = listOf(
-                                   Color(0xFFcdedee), Color(0xFF88AFB0)
-                                              )
-                                                       ),
-                           shape = RoundedCornerShape(15.dp)
-                              )
-                       .clip(
-                           RoundedCornerShape(
-                               topStartPercent = 50,
-                               topEndPercent = 50,
-                               bottomEndPercent = 50,
-                               bottomStartPercent = 50
-                                             )
+    Scaffold(topBar = {
+        WeatherAppBar(
+            title = "Settings",
+            icon = Icons.Default.ArrowBack,
+            isMainScreen = false,
+            navController = navController,
+                     ) {
+            navController.popBackStack()
+        }
+    }) {
+        Surface(
+            modifier = Modifier.fillMaxWidth().fillMaxHeight()
+               ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+                  ) {
+                Text(
+                    "Change Units of Measurement", modifier = Modifier.padding(bottom = 15.dp)
+                    )
+
+                measurementUnits.forEachIndexed { index, choice ->
+                    Row(
+                        modifier = Modifier.padding(3.dp).fillMaxWidth().height(55.dp).border(
+                                width = 4.dp,
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        Color(0xFFcdedee), Color(0xFF88AFB0)
+                                                   )
+                                                            ),
+                                shape = RoundedCornerShape(15.dp)
+                                                                                             ).clip(
+                                RoundedCornerShape(
+                                    topStartPercent = 50,
+                                    topEndPercent = 50,
+                                    bottomEndPercent = 50,
+                                    bottomStartPercent = 50
+                                                  )
+                                                                                                   )
+                            .background(Color.Transparent),
+                        verticalAlignment = Alignment.CenterVertically
+                       ) {
+                        RadioButton(selected = (answerState.value == index), onClick = {
+                            selectedUnit(index)
+                        }, modifier = Modifier.padding(start = 16.dp)) //end rb
+                        Text(text = choice)
+                    }
+
+                }
+
+                Text(text = choiceState.value)
+                Log.d("TAG", "SettingsScreen: ${choiceFromDb.toList()}")
+                Button(onClick = {
+                    settingsViewModel.deleteAllUnits()
+                    settingsViewModel.insertUnit(com.bawp.jetweatherapp.models.Unit(unit = choiceState.value))
+                    //save/update selection to db!
+//                   if ( choiceFromDb.isNullOrEmpty()){
+//                       //insert
+//                       settingsViewModel.insertUnit(com.bawp.jetweatherapp.models.Unit(unit = choiceState.value))
+//                   }else {
+//                       settingsViewModel.deleteAllUnits().run {
+//                           settingsViewModel.insertUnit(com.bawp.jetweatherapp.models.Unit(unit = choiceState.value))
+//                       }//delete all first
+//                       //update
+//                   }
+                },
+                    modifier = Modifier.padding(3.dp)
+                        .align(alignment = Alignment.CenterHorizontally),
+                    shape = RoundedCornerShape(34.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(0xFFEFBE42)
+                                                        ),
+                    content = {
+                        Text(
+                            text = "Save",
+                            modifier = Modifier.padding(4.dp),
+                            color = Color.White,
+                            fontSize = 17.sp
                             )
-                       .background(Color.Transparent),
-                       verticalAlignment = Alignment.CenterVertically) {
-                       RadioButton(
-                           selected = (answerState.value == index),
-                           onClick = {
-                               selectedUnit(index)
-                           },
-                           modifier = Modifier.padding(start = 16.dp),
-//                           colors = RadioButtonDefaults.colors(
-//                                   selectedColor = if (correctAnswerState.value == true && index == answerState.value) {
-//                                       Color.Green.copy(alpha = 0.2f)
-//                                   } else {
-//                                       Color.Red.copy(alpha = 0.2f)
-//                                   }
-//                                                              )
-                                  ) //end rb
-                       Text(text = choice)
-               }
-
-           }
-
-//Text(text = choiceFromDb[0].unit)
-               Log.d("TAG", "SettingsScreen: ${choiceFromDb.toList()}")
-
-               Button(onClick = {
-
-                                //save/update selection to db!
-                   if ( choiceFromDb.isNullOrEmpty()){
-                       //insert
-                       settingsViewModel.insertUnit(com.bawp.jetweatherapp.models.Unit(unit = choiceState.value))
-                   }else {
-                       settingsViewModel.deleteAllUnits()//delete all first
-                       //update
-                       settingsViewModel.insertUnit(com.bawp.jetweatherapp.models.Unit(unit = choiceState.value))
-                   }
-               },
-                   modifier = Modifier
-                       .padding(3.dp)
-                       .align(alignment = Alignment.CenterHorizontally),
-                   shape = RoundedCornerShape(34.dp),
-                   colors = ButtonDefaults.buttonColors(
-                       backgroundColor = Color(0xFFEFBE42)
-                                                       ), content = {
-                       Text(text = "Save",
-                           modifier = Modifier.padding(4.dp),
-                           color = Color.White,
-                           fontSize = 17.sp)
-
-                   })
-
-       }
-   }
-}
+                    })
+            }
+        }
+    }
 }

@@ -12,14 +12,12 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(private val repository: WeatherRepository):
     ViewModel() {
-
     val data: MutableState<DataOrException<WeatherObject, Boolean, Exception>>
             = mutableStateOf(DataOrException(null, true,Exception("")))
 
-    suspend fun getWeatherData(city: String): DataOrException<WeatherObject, Boolean, Exception> {
-        return repository.getWeather(cityQuery = city)
+    suspend fun getWeatherData(city: String, units: String): DataOrException<WeatherObject, Boolean, Exception> {
+        return repository.getWeather(cityQuery = city, units = units)
     }
-
 
 }
 

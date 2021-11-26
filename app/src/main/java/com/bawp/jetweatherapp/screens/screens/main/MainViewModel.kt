@@ -38,9 +38,9 @@ class MainViewModel @Inject constructor( private val repository: WeatherReposito
 //    }
 
 
-    fun getWeatherData(city: String): DataOrException<WeatherObject, Boolean, Exception> {
+    fun getWeatherData(city: String, units: String): DataOrException<WeatherObject, Boolean, Exception> {
         viewModelScope.launch {
-            data.value = repository.getWeather(cityQuery = city)
+            data.value = repository.getWeather(cityQuery = city, units = units)
         }
         Log.d("HAP", "getWeatherData: ${data.value}")
         return data.value

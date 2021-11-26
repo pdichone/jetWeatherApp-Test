@@ -3,13 +3,13 @@ package com.bawp.jetweatherapp.screens.screens.main
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,19 +21,17 @@ import androidx.navigation.NavHostController
 import coil.annotation.ExperimentalCoilApi
 import com.bawp.jetweatherapp.components.WeatherAppBar
 import com.bawp.jetweatherapp.data.DataOrException
-import com.bawp.jetweatherapp.data.UnitModeImpl
 import com.bawp.jetweatherapp.model.WeatherItem
 import com.bawp.jetweatherapp.model.WeatherObject
 import com.bawp.jetweatherapp.navigation.WeatherScreens
 import com.bawp.jetweatherapp.screens.screens.search.SearchViewModel
+import com.bawp.jetweatherapp.screens.screens.settings.SettingsViewModel
 import com.bawp.jetweatherapp.utils.formatDate
 import com.bawp.jetweatherapp.utils.formatDecimals
 import com.bawp.jetweatherapp.widgets.HumidityWindPressureRow
 import com.bawp.jetweatherapp.widgets.SunsetSunRiseRow
 import com.bawp.jetweatherapp.widgets.WeatherDetailRow
 import com.bawp.jetweatherapp.widgets.WeatherStateImage
-import androidx.compose.foundation.layout.Row
-import androidx.compose.runtime.*
 
 
 @ExperimentalCoilApi
@@ -41,16 +39,23 @@ import androidx.compose.runtime.*
 @Composable
 fun MainScreen(
     viewModel: SearchViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
     navController: NavHostController,
-    city: String,
-              ) {
+    city: String) {
 
     val curCity: String = if (city.isBlank()) "Spokane" else city
+    val unitFromDB = settingsViewModel.unitList.collectAsState().value
+    var unit by remember {
+        mutableStateOf("imperial") //default value
+    }
+    if (!unitFromDB.isNullOrEmpty()) {
+        Log.d("TAGF", "MainScreen: ${unitFromDB[0].unit.split(" ")[0].lowercase()}")
+        unit = unitFromDB[0].unit.split(" ")[0].lowercase()
 
+    }
     val weatherData = produceState<DataOrException<WeatherObject, Boolean, Exception>>(
-        initialValue = DataOrException(loading = true)
-                                                                                      ) {
-        value = viewModel.getWeatherData(city = curCity)
+        initialValue = DataOrException(loading = true)) {
+        value = viewModel.getWeatherData(city = curCity, units = unit)
     }.value
 
     if (weatherData.loading == true) {
@@ -121,9 +126,7 @@ private fun MainContent(data: WeatherObject?) {
                 checked = !unitToggleState,
                 onCheckedChange = {
                 unitToggleState = !it
-
                     Log.d("TAG", "MainContent: $unitToggleState")
-
             }, ) {
                 Text(text = if (unitToggleState) "F" else "C")
             }
@@ -151,11 +154,8 @@ private fun MainContent(data: WeatherObject?) {
                     Text(
                         text = data.list[0].weather[0].main, fontStyle = FontStyle.Italic
                         )
-
                 }
-
             }
-
         }
 
         HumidityWindPressureRow(weather = data.list[0])
