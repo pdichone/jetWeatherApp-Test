@@ -57,7 +57,9 @@ fun FavoritesScreen(
 
 @ExperimentalCoilApi
 @Composable
-fun CityRow(favorite: Favorite, navController: NavController, viewModel: FavoriteViewModel) {
+fun CityRow(favorite: Favorite,
+            navController: NavController,
+            viewModel: FavoriteViewModel) {
     Surface(
         Modifier
             .padding(3.dp)

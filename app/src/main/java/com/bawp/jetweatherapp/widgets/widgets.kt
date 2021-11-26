@@ -32,6 +32,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.bawp.jetweatherapp.R
 import com.bawp.jetweatherapp.model.WeatherItem
+import com.bawp.jetweatherapp.screens.screens.settings.SettingsViewModel
 import com.bawp.jetweatherapp.utils.formatDate
 import com.bawp.jetweatherapp.utils.formatDateTime
 import com.bawp.jetweatherapp.utils.formatDecimals
@@ -75,9 +76,8 @@ fun SunsetSunRiseRow(weather: WeatherItem?) {
     }
 }
 
-@Preview
 @Composable
-fun HumidityWindPressureRow(weather: WeatherItem? = null) {
+fun HumidityWindPressureRow(weather: WeatherItem? = null, isImperial: Boolean) {
     Row(
         modifier = Modifier
             .padding(bottom = 12.dp)
@@ -113,7 +113,7 @@ fun HumidityWindPressureRow(weather: WeatherItem? = null) {
                 contentDescription = "wind",
                 modifier = Modifier.size(20.dp)
                 )
-            Text(text = " %.0f".format(weather?.speed) + "mph",
+            Text(text = " %.0f".format(weather?.speed) + if (isImperial) "mph" else "m/s",
                 style = MaterialTheme.typography.caption)
         }
 

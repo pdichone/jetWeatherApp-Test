@@ -1,6 +1,5 @@
 package com.bawp.jetweatherapp.screens.screens.main
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -33,7 +32,6 @@ import com.bawp.jetweatherapp.widgets.SunsetSunRiseRow
 import com.bawp.jetweatherapp.widgets.WeatherDetailRow
 import com.bawp.jetweatherapp.widgets.WeatherStateImage
 
-
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
@@ -48,25 +46,34 @@ fun MainScreen(
     var unit by remember {
         mutableStateOf("imperial") //default value
     }
+    var isImperial by remember {
+        mutableStateOf(false)
+
+    }
+
     if (!unitFromDB.isNullOrEmpty()) {
-        Log.d("TAGF", "MainScreen: ${unitFromDB[0].unit.split(" ")[0].lowercase()}")
+       // Log.d("TAGF", "MainScreen: ${unitFromDB[0].unit.split(" ")[0].lowercase()}")
         unit = unitFromDB[0].unit.split(" ")[0].lowercase()
+        isImperial = unit == "imperial"
+
+        val weatherData = produceState<DataOrException<WeatherObject, Boolean, Exception>>(
+            initialValue = DataOrException(loading = true)) {
+            value = viewModel.getWeatherData(city = curCity, units = unit)
+        }.value
+
+        if (weatherData.loading == true) {
+            CircularProgressIndicator(
+                color = Color.DarkGray
+                                     )
+        } else if (weatherData.data != null) {
+            MainScaffold(weatherObject = weatherData.data!!,
+                navController = navController, isImperial = isImperial)
+
+        }
 
     }
-    val weatherData = produceState<DataOrException<WeatherObject, Boolean, Exception>>(
-        initialValue = DataOrException(loading = true)) {
-        value = viewModel.getWeatherData(city = curCity, units = unit)
-    }.value
 
-    if (weatherData.loading == true) {
-        CircularProgressIndicator(
-            color = Color.DarkGray
-                                 )
-    } else if (weatherData.data != null) {
-        MainScaffold(weatherObject = weatherData.data!!,
-            navController = navController)
 
-    }
 
 }
 
@@ -74,31 +81,27 @@ fun MainScreen(
 @ExperimentalAnimationApi
 @Composable
 fun MainScaffold(
-    weatherObject: WeatherObject, navController: NavHostController,
-                ) {
+    weatherObject: WeatherObject,
+    navController: NavHostController,
+    isImperial: Boolean, ) {
 
     Scaffold(topBar = {
-
         WeatherAppBar(
             title = weatherObject.city.name + ", ${weatherObject.city.country}",
             navController = navController,
             onAddActionClicked = { navController.navigate(WeatherScreens.SearchScreen.name) },
-            elevation = 5.dp
-                     )
-
+            elevation = 5.dp)
 
     }, bottomBar = {}, backgroundColor = Color.LightGray.copy(alpha = 0.08f)
             ) {
-
-        MainContent(data = weatherObject)
+        MainContent(data = weatherObject, isImperial = isImperial)
     }
-
 }
 
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
-private fun MainContent(data: WeatherObject?) {
+private fun MainContent(data: WeatherObject?, isImperial: Boolean) {
     val imageUrl = "https://openweathermap.org/img/wn/${data!!.list[0].weather[0].icon}.png"
     var unitToggleState by remember {
         mutableStateOf(false)
@@ -122,14 +125,14 @@ private fun MainContent(data: WeatherObject?) {
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(6.dp)
                 )
-            IconToggleButton(
-                checked = !unitToggleState,
-                onCheckedChange = {
-                unitToggleState = !it
-                    Log.d("TAG", "MainContent: $unitToggleState")
-            }, ) {
-                Text(text = if (unitToggleState) "F" else "C")
-            }
+//            IconToggleButton(
+//                checked = !unitToggleState,
+//                onCheckedChange = {
+//                unitToggleState = !it
+//                    Log.d("TAG", "MainContent: $unitToggleState")
+//            }, ) {
+//                Text(text = if (unitToggleState) "F" else "C")
+//            }
         }
         Surface(
             modifier = Modifier
@@ -158,7 +161,7 @@ private fun MainContent(data: WeatherObject?) {
             }
         }
 
-        HumidityWindPressureRow(weather = data.list[0])
+        HumidityWindPressureRow(weather = data.list[0], isImperial = isImperial)
         Divider()
         Spacer(modifier = Modifier.height(15.dp))
         SunsetSunRiseRow(weather = data.list[0])
